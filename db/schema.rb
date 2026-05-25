@@ -15,7 +15,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_160132) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "oauth_access_grants", force: :cascade do |t|
-    t.bigint "application_id"
+    t.bigint "application_id", null: false
     t.datetime "created_at", null: false
     t.integer "expires_in", null: false
     t.text "redirect_uri", null: false
@@ -29,7 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_160132) do
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.bigint "application_id", null: false
+    t.bigint "application_id"
     t.datetime "created_at", null: false
     t.integer "expires_in"
     t.string "previous_refresh_token", default: "", null: false

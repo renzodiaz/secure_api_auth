@@ -5,12 +5,15 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
-# Rails.application.config.middleware.insert_before 0, Rack::Cors do
-#   allow do
-#     origins "example.com"
-#
-#     resource "*",
-#       headers: :any,
-#       methods: [:get, :post, :put, :patch, :delete, :options, :head]
-#   end
-# end
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    # ⚠️ In production, replace with your real frontend domain
+    origins ENV.fetch("FRONTEND_URL", "http://localhost:5173")
+
+    resource "*",
+      headers: :any,
+      methods: [ :get, :post, :put, :patch, :delete, :options, :head ],
+      credentials: true, # Required for cookies!
+      expose: %w[X-CSRF-Token]
+  end
+end

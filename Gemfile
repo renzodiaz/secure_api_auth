@@ -36,9 +36,18 @@ gem "image_processing", "~> 1.2"
 gem "devise"
 gem "doorkeeper"
 gem "doorkeeper-jwt"
+gem "pundit"
 
-# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+# Security
+gem "rack-cors"
+gem "rack-attack"
+gem "secure_headers"
+
+# Encryption
+gem "lockbox"
+
+# Monitoring & Logging
+gem "lograge"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
