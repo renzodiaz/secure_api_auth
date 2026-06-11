@@ -12,9 +12,13 @@ module Api
         if user&.valid_password?(params[:password])
           tokens = generate_tokens(user)
           set_auth_cookies(tokens)
-          render json: { user: user_response(user), expires_at: tokens[:expires_at] }
+          reset_session
+          render json: {
+            user: UserSerializer.new(user).as_json,
+            expires_at: tokens[:expires_at],
+            csrf_token: form_authenticity_token
+          }
         else
-          # Generic error — don't reveal if email exists or not
           render json: { error: "Invalid credentials" }, status: :unauthorized
         end
       end
@@ -39,11 +43,16 @@ module Api
         end
 
         user = User.find_by(id: existing.resource_owner_id)
-        existing.revoke  # Revoke old token before issuing new one
+        existing.revoke
 
         tokens = generate_tokens(user)
         set_auth_cookies(tokens)
-        render json: { user: user_response(user), expires_at: tokens[:expires_at] }
+        reset_session
+        render json: {
+          user: UserSerializer.new(user).as_json,
+          expires_at: tokens[:expires_at],
+          csrf_token: form_authenticity_token
+        }
       end
 
       private
@@ -59,8 +68,11 @@ module Api
           scopes: "read write",
           use_refresh_token: true
         )
-        { access_token: token.token, refresh_token: token.refresh_token,
-          expires_at: token.expires_in.seconds.from_now.iso8601 }
+        {
+          access_token: token.token,
+          refresh_token: token.refresh_token,
+          expires_at: token.expires_in.seconds.from_now.iso8601
+        }
       end
 
       def set_auth_cookies(tokens)
@@ -88,10 +100,6 @@ module Api
 
       def refresh_expired?(token)
         token.created_at + 7.days < Time.current
-      end
-
-      def user_response(user)
-        { id: user.id, email: user.email }
       end
     end
   end

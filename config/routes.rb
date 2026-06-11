@@ -6,6 +6,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      # CSRF token for SPA clients
+      get "csrf_token", to: "csrf#show"
+
       # Authentication endpoints
       post   "auth/register", to: "registrations#create"
       post   "auth/login",    to: "sessions#create"

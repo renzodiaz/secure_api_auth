@@ -46,6 +46,9 @@ gem "secure_headers"
 # Encryption
 gem "lockbox"
 
+# Serialization
+gem "alba"
+
 # Monitoring & Logging
 gem "lograge"
 
